@@ -56,3 +56,5 @@ states_name = {
 "WV": "West Virginia",
 "WY": "Wyoming"
 }
+
+state_names2 = {v:k for k, v in states_name.items()}
