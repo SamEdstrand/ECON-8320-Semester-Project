@@ -23,10 +23,10 @@ for i, row in data.iterrows():
         request_date = "Missing" # make missing data consistent
     request_date = str(request_date)  # convert to string
     request_date = request_date.strip() # remove whitespace
-    if re.search(r'^(([0][1-9]|[1-2][0-9]|[3][0-1])-([0][1-9]|[1][0-2])-(\d\d\d\d))$', request_date):
+    if re.match(r'^(([1-9]|[1][0-2])-([1-9]|[1-2][0-9]|[3][0-1])-(\d\d))$', request_date):
         #request_date = f"{request_date[0:1]}/{request_date[3:4]}/{request_date[6:9]}"
         request_date = request_date.replace("-", "/")  # replace dashes with slashes
-    if re.search(r'^(([0][1-9]|[1-2][0-9]|[3][0-1])/([0][1-9]|[1][0-2])/(\d\d\d\d))$', request_date):
+    if not re.match(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d))$', request_date):
         request_date = "Error: Not a valid Grant Req Date"        # if grant request doesnt match DD/MM/YYYY
     data.at[i, 'Grant Req Date'] = request_date # replace grant request date line item
 
@@ -36,7 +36,7 @@ for i, row in data.iterrows():
         app_year = "Missing" # make missing data consistent
     if app_year != "Missing":
         app_year = int(app_year) # convert to integers
-    if app_year != 1 or app_year != 2 or app_year != 3:
+    if app_year != 1 and app_year != 2 and app_year != 3:
         app_year = "Error: Not a valid App Year" #check for integers within logical range
     data.at[i, 'App Year'] = app_year  # replace app_year line item
 
@@ -74,11 +74,27 @@ for i, row in data.iterrows():
         request_status = "Error: Not a valid Request Status"
     data.at[i, 'Request Status'] = request_status  # replace line item
 
+
     payment_status = row['Payment Submitted?']  # return payment submitted line item
     payment_status = str(payment_status)      # convert to string
-    payment_status = payment_status.strip()       # remove whitespace
-    
-    
+    payment_status = payment_status.strip() # remove whitespace
+    if payment_status == "":
+        payment_status = "Missing"         # make missing data consistent
+    if re.search(r'^(([1-9]|[1][0-2])-([1-9]|[1-2][0-9]|[3][0-1])-(\d\d))$', payment_status):
+        payment_status = payment_status.replace("-", "/")  # replace dashes with slashes
+    if not re.search(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d))$', payment_status):
+        payment_status = payment_status.lower()
+        payment_status = payment_status.title()                 # make formatting consistent
+        if payment_status != "Yes" and payment_status != "No":        # only "Yes" or "No" if not date
+            payment_status = "Error: Not a valid Payment Status"
+    data.at[i, 'Payment Submitted?'] = payment_status          # replace line item
+
+
+    reason = row['Reason - Pending/No']     # make sure reason is text
+    if type(reason) != str:
+        reason = ""
+    reason.strip()
+    data.at[i, 'Reason - Pending/No'] = reason
 
 
     city = row['Pt City'] # pull city line item
@@ -112,7 +128,7 @@ for i, row in data.iterrows():
 
     zipcode = row['Pt Zip'] #pull zipcode line item
     if zipcode == '':
-        zipcode = "Missing" # make miss data consistent
+        zipcode = "Missing" # make missing data consistent
     try:
         zipcode = str(zipcode) # convert to string for regex check
     except:
@@ -123,11 +139,19 @@ for i, row in data.iterrows():
     data.at[i, 'Pt Zip'] = zipcode   # replace zip code line item
 
 
+    language = row['Language']     # pull languge line item
+    if language == '' or type(language) != str:     # make missing data consistent
+        language = "Missing"
+    language = language.strip()
+    language = language.title()
+    data.at[i, 'Language'] = language 
 
 
-print(data['Grant Req Date'].sample(10))
-print(data['Grant Req Date'].unique())
-print(len(data['Grant Req Date'].unique()))
+
+
+print(data['Language'].unique())
+print(data['Language'].sample(10))
+print(len(data['Language'].unique()))
 
 
 

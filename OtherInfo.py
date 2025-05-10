@@ -1,3 +1,5 @@
+import re
+
 states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
           "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
           "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
@@ -58,3 +60,5 @@ states_name = {
 }
 
 state_names2 = {v:k for k, v in states_name.items()}
+stre = "fjflkd"
+print(type(stre))
