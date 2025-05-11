@@ -60,5 +60,3 @@ states_name = {
 }
 
 state_names2 = {v:k for k, v in states_name.items()}
-stre = "fjflkd"
-print(type(stre))

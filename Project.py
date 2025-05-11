@@ -37,8 +37,8 @@ for i, row in data.iterrows():
         app_year = "Missing" # make missing data consistent
     if app_year != "Missing":
         app_year = int(app_year) # convert to integers
-    if app_year != 1 and app_year != 2 and app_year != 3:
-        app_year = "Error: Not a valid App Year" #check for integers within logical range
+        if app_year != 1 and app_year != 2 and app_year != 3:
+            app_year = "Error: Not a valid App Year" #check for integers within logical range
     data.at[i, 'App Year'] = app_year  # replace app_year line item
 
 
@@ -216,7 +216,7 @@ for i, row in data.iterrows():
     sexuality = str(sexuality)  # convert to string
     sexuality = sexuality.strip()  # remove whitespace
     sexuality = sexuality.title()  # make capitalization consistent
-    if sexuality[0:2] ==  "St" or sexuality[0:3] == "Het":
+    if sexuality[0:2] == "St" or sexuality[0:3] == "Het":
         sexuality = "Heterosexual"    # fix spelling and inconsistency
     elif sexuality[0:3] == "Gay" or sexuality[0:3] == "Les" or sexuality[0:3] == "Hom" or sexuality[0:3] == "Que":
         sexuality = "Homosexual"
@@ -228,7 +228,7 @@ for i, row in data.iterrows():
         sexuality = "Decline to answer"
     else:
         sexuality = "Missing"
-    data.at[i, 'Sexuality'] = sexuality  # replace line item
+    data.at[i, 'Sexual Orientation'] = sexuality  # replace line item
 
 
     insurance = row['Insurance Type']     # pull insurance line item
@@ -253,6 +253,7 @@ for i, row in data.iterrows():
         except ValueError:
             household_size = "Error: Invalid Household Size"  # if not missing or integer, assumed to be an error
     data.at[i, 'Household Size'] = household_size # replace line item
+
 
     h_income = row[' Total Household Gross Monthly Income '] # pull income line item
     h_income = str(h_income)           # convert to string
@@ -296,7 +297,6 @@ for i, row in data.iterrows():
     referral = row['Referral Source']   # pull referral line item
     referral = str(referral)             # convert to string
     referral = referral.strip()             # remove whitespace
-    referral = referral.title()              # make capitalization consistent
     data.at[i, 'Referral Source'] = referral  # replace line item
 
 
@@ -312,11 +312,11 @@ for i, row in data.iterrows():
 
 
 
-print(data['Distance roundtrip/Tx'].unique())
-print(data['Distance roundtrip/Tx'].sample(10))
-print(len(data['Distance roundtrip/Tx'].unique()))
+print(data['Sexual Orientation'].unique())
+print(data['Sexual Orientation'].sample(10))
+print(len(data['Sexual Orientation'].unique()))
 
 
-#st.write(data.head(25))
+#st.write(data.sample(50))
 
 
