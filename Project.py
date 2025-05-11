@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import regex as re
 import streamlit as st
 from OtherInfo import states, state_names2
@@ -26,7 +27,7 @@ for i, row in data.iterrows():
     if re.match(r'^(([1-9]|[1][0-2])-([1-9]|[1-2][0-9]|[3][0-1])-(\d\d))$', request_date):
         #request_date = f"{request_date[0:1]}/{request_date[3:4]}/{request_date[6:9]}"
         request_date = request_date.replace("-", "/")  # replace dashes with slashes
-    if not re.match(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d))$', request_date):
+    if not re.match(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d))$', request_date) and request_date != "Missing":
         request_date = "Error: Not a valid Grant Req Date"        # if grant request doesnt match DD/MM/YYYY
     data.at[i, 'Grant Req Date'] = request_date # replace grant request date line item
 
@@ -85,7 +86,7 @@ for i, row in data.iterrows():
     if not re.search(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d))$', payment_status):
         payment_status = payment_status.lower()
         payment_status = payment_status.title()                 # make formatting consistent
-        if payment_status != "Yes" and payment_status != "No":        # only "Yes" or "No" if not date
+        if payment_status != "Yes" and payment_status != "No" and payment_status != "Missing":        # only "Yes" or "No" if not date
             payment_status = "Error: Not a valid Payment Status"
     data.at[i, 'Payment Submitted?'] = payment_status          # replace line item
 
@@ -142,17 +143,178 @@ for i, row in data.iterrows():
     language = row['Language']     # pull languge line item
     if language == '' or type(language) != str:     # make missing data consistent
         language = "Missing"
-    language = language.strip()
-    language = language.title()
-    data.at[i, 'Language'] = language 
+    language = language.strip()   # remove whitespace
+    language = language.title()   # capitalize
+    data.at[i, 'Language'] = language # replace line item
+
+
+    DOB = row['DOB'] # pull date of birth
+    if DOB == '':
+        DOB = "Missing"           # make missing data consistent
+    DOB = str(DOB)  # convert to string
+    DOB = DOB.strip() # remove whitespace
+    if re.match(r'^(([1-9]|[1][0-2])-([1-9]|[1-2][0-9]|[3][0-1])-(\d\d|\d\d\d\d))$', DOB): #allow for 2 or 4 digit years
+        DOB = request_date.replace("-", "/")  # replace dashes with slashes
+    if not re.match(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d|\d\d\d\d))$', DOB) and DOB != "Missing":
+        DOB = "Error: Not a valid Date of Birth"        # if DOB grant request doesnt match DD/MM/YYYY
+    data.at[i, 'DOB'] = DOB # replace line item
+
+
+    maritial_status = row['Marital Status']   # pull maritial status line item
+    maritial_status = str(maritial_status)
+    if maritial_status == '':
+        maritial_status = "Missing"     # make missing data consistent
+    if maritial_status[0:3]  == "Sep":
+        maritial_status = "Separated"   # fixed spelling error for separated
+    maritial_status = maritial_status.strip()  # remove whitespace
+    maritial_status = maritial_status.title()    # consistent capitalization
+    data.at[i, 'Marital Status'] = maritial_status    # replace line item
+
+
+    gender = row['Gender']    # pull gender line item
+    gender = str(gender)
+    gender = gender.strip()   # remove whitespace
+    gender = gender.title()   # make capitalization consistent
+    if gender == '':
+        gender = "Missing"    # make missing data consistent
+    if gender[0] == "M":
+        gender = "Male"       # make male consistent
+    elif gender[0] == "F":
+        gender = "Female"     # make female consistent]
+    data.at[i, 'Gender'] = gender # replace line item
+
+
+    race = row['Race']  # pull race line item
+    race = str(race)    # convert to string
+    race = race.strip()  # remove whitespace
+    race = race.title()   # make capitalization consistent
+    if race == '':
+        race = "Missing"  # make missing data consistent
+    if race[0:15] == "American Indian":            # fix inconsistency
+        race = "American Indian Or Alaska Native"
+    if race[0:3] == "Whi":             # fix inconsistency
+        race = "White"
+    data.at[i, 'Race'] = race              # replace line item
+
+
+    hispanic = row['Hispanic/Latino'] # pull line item
+    hispanic = str(hispanic)         # convert to string
+    if hispanic == '':               # make missing data consistent
+        hispanic = "Missing"
+    hispanic = hispanic.strip()      # remove whitespace
+    hispanic = hispanic.title()      # make capitalization consistent
+    if hispanic[0:1]  == "H" or hispanic[0:1] == "Y":
+        hispanic = "Yes"             # account for all yes answers
+    elif hispanic[0:1] == "N":       # account for all no answers
+        hispanic = "No"
+    elif hispanic !=  "Missing":        # otherwise
+        hispanic = "Decline to answer"
+    data.at[i, 'Hispanic/Latino'] = hispanic # replace line item
+
+
+    sexuality = row['Sexual Orientation']    # pull line item
+    sexuality = str(sexuality)  # convert to string
+    sexuality = sexuality.strip()  # remove whitespace
+    sexuality = sexuality.title()  # make capitalization consistent
+    if sexuality[0:2] ==  "St" or sexuality[0:3] == "Het":
+        sexuality = "Heterosexual"    # fix spelling and inconsistency
+    elif sexuality[0:3] == "Gay" or sexuality[0:3] == "Les" or sexuality[0:3] == "Hom" or sexuality[0:3] == "Que":
+        sexuality = "Homosexual"
+    elif sexuality[0:2] == "Bi":
+        sexuality = "Bisexual"
+    elif sexuality[0:2] == "As":
+        sexuality = "Asexual"                   # check options
+    elif sexuality[0:3] == "Dec":
+        sexuality = "Decline to answer"
+    else:
+        sexuality = "Missing"
+    data.at[i, 'Sexuality'] = sexuality  # replace line item
+
+
+    insurance = row['Insurance Type']     # pull insurance line item
+    insurance = str(insurance)
+    insurance = insurance.strip()
+    insurance = insurance.title()
+    if insurance == '' or insurance == "Unknown":      # make missing data consistent
+        insurance = "Missing"
+    elif insurance[0:3] == "Uni":     # fixing uninsured typos
+        insurance = "Uninsured"
+    data.at[i, 'Insurance Type'] = insurance      # replace line item
+
+
+    household_size = row['Household Size']    # pull household size
+    if household_size == '':
+        household_size = "Missing"
+    if household_size != "Missing":
+        try:
+            household_size = int(household_size)      # attempt convert to integer
+            if household_size > 25:                               # check that household size is reasonable
+                household_size = "Error: Invalid Household Size"
+        except ValueError:
+            household_size = "Error: Invalid Household Size"  # if not missing or integer, assumed to be an error
+    data.at[i, 'Household Size'] = household_size # replace line item
+
+    h_income = row[' Total Household Gross Monthly Income '] # pull income line item
+    h_income = str(h_income)           # convert to string
+    h_income = h_income.strip()        # remove whitespace
+    if h_income == '':
+        h_income = "Missing"                 # make missing data consistent and known
+    h_income = h_income.replace("$","") # replace $
+    h_income = h_income.replace(",","")   # replace commas
+    h_income = h_income.replace("-","0")    # convert dashes to 0
+    if "(" in h_income:                    # check for negatives
+        h_income = h_income.replace("(", "").replace(")", "")    # replace parantheses
+        try:
+            h_income = round(float(h_income),2)           # convert to float, roun
+            h_income *= -1                             # reinstate negative balan
+        except:
+            h_income = "Error: Not a valid Balance"
+    elif h_income != "Missing":                                # for positive balances
+        try:
+            h_income = round(float(balance),2)         # convert to float, round
+        except:
+            h_income = "Error: Not a valid Balance"
+    data.at[i, ' Total Household Gross Monthly Income '] = h_income     # replace income line item
+
+
+    distance = row['Distance roundtrip/Tx']        # pull distance line item
+    if distance == '' or distance == "N/A":        # make missing data consistent
+        distance = "Missing"
+    distance = str(distance)
+    distance = distance.strip()
+    distance = distance.title()                  # make capitalization consistent
+    if distance[0:1] == "U" :                  # unknown data
+        distance = "Unknown"
+    elif distance != "Missing":
+        try:                                        # attempt conversion to float
+            distance = round(float(distance),1)
+        except:
+            distance = "Error: Not a valid Distance"      # either unknown, missing or number
+    data.at[i, 'Distance roundtrip/Tx'] = distance   # replace line item
+
+
+    referral = row['Referral Source']   # pull referral line item
+    referral = str(referral)             # convert to string
+    referral = referral.strip()             # remove whitespace
+    referral = referral.title()              # make capitalization consistent
+    data.at[i, 'Referral Source'] = referral  # replace line item
+
+
+    referral2 = row['Referred By:']  # pull referred by
+    referral2 = str(referral2)                 # convert to string
+    referral2 = referral2.strip()                 # remove whitespace
+    referral2 = referral2.title()                  # make capitalization cons
+    data.at[i, 'Referred By:'] = referral2       # replace line item
+    
+
+    assitance = row['Type of Assistance (CLASS)']
 
 
 
 
-print(data['Language'].unique())
-print(data['Language'].sample(10))
-print(len(data['Language'].unique()))
-
+print(data['Distance roundtrip/Tx'].unique())
+print(data['Distance roundtrip/Tx'].sample(10))
+print(len(data['Distance roundtrip/Tx'].unique()))
 
 
 #st.write(data.head(25))
