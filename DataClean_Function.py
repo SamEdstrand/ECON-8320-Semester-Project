@@ -30,14 +30,14 @@ def clean(df):
             request_date = "Error: Not a valid Grant Req Date"  # if grant request doesnt match DD/MM/YYYY
         df.at[i, 'Grant Req Date'] = request_date  # replace grant request date line item
 
+
         app_year = row['App Year']  # pull app year line item
-        if app_year == '':
-            app_year = "Missing"  # make missing data consistent
-        if app_year != "Missing":
-            app_year = int(app_year)  # convert to integers
-            if app_year != 1 and app_year != 2 and app_year != 3:
-                app_year = "Error: Not a valid App Year"  # check for integers within logical range
+        app_year = int(app_year)  # convert to
+        if app_year != 1 and app_year != 2 and app_year != 3:
+            app_year = "Error: Not a valid App Year"
+        app_year = str(app_year)  # make data type consistent for arrow serialization
         df.at[i, 'App Year'] = app_year  # replace app_year line item
+
 
         balance = row[' Remaining Balance ']  # pull remaining balance line item
         balance = str(balance)  # convert to string
@@ -230,18 +230,20 @@ def clean(df):
             household_size = "Missing"
         if household_size != "Missing":
             try:
-                household_size = int(household_size)  # attempt convert to integer
+                household_size = float(household_size)  # attempt convert to integer
                 if household_size > 25:  # check that household size is reasonable
                     household_size = "Error: Invalid Household Size"
             except ValueError:
                 household_size = "Error: Invalid Household Size"  # if not missing or integer, assumed to be an error
+        household_size = str(household_size)  # make data type consistent for arrow serialization
         df.at[i, 'Household Size'] = household_size  # replace line item
+
 
         h_income = row[' Total Household Gross Monthly Income ']  # pull income line item
         h_income = str(h_income)  # convert to string
         h_income = h_income.strip()  # remove whitespace
         if h_income == '':
-            h_income = "Missing"  # make missing data consistent and known
+            h_income = np.nan  # make missing data consistent and known
         h_income = h_income.replace("$", "")  # replace $
         h_income = h_income.replace(",", "")  # replace commas
         h_income = h_income.replace("-", "0")  # convert dashes to 0
@@ -251,27 +253,19 @@ def clean(df):
                 h_income = round(float(h_income), 2)  # convert to float, roun
                 h_income *= -1  # reinstate negative balan
             except:
-                h_income = "Error: Not a valid Balance"
-        elif h_income != "Missing":  # for positive balances
+                h_income = np.nan # make data type consistent for arrow serialization
+        else:  # for positive balances
             try:
                 h_income = round(float(balance), 2)  # convert to float, round
             except:
-                h_income = "Error: Not a valid Balance"
+                h_income = np.nan # make data type consistent for arrow serialization
         df.at[i, ' Total Household Gross Monthly Income '] = h_income  # replace income line item
 
         distance = row['Distance roundtrip/Tx']  # pull distance line item
-        if distance == '' or distance == "N/A":  # make missing data consistent
-            distance = "Missing"
-        distance = str(distance)
-        distance = distance.strip()
-        distance = distance.title()  # make capitalization consistent
-        if distance[0:1] == "U":  # unknown data
-            distance = "Unknown"
-        elif distance != "Missing":
-            try:  # attempt conversion to float
-                distance = round(float(distance), 1)
-            except:
-                distance = "Error: Not a valid Distance"  # either unknown, missing or number
+        try:  # attempt conversion to float
+            distance = round(float(distance), 1)
+        except:
+            distance = np.nan  # either unknown, missing or number
         df.at[i, 'Distance roundtrip/Tx'] = distance  # replace line item
 
         referral = row['Referral Source']  # pull referral line item
