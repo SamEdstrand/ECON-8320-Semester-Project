@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import regex as re
 import streamlit as st
-from OtherInfo import states, state_names2
+from OtherInfo import states, state_names2, Assistance_types
 
 data = pd.read_csv('https://raw.githubusercontent.com/SamEdstrand/ECON-8320-Semester-Project/refs/heads/main/Data%20-%202.csv')
 
@@ -307,16 +307,80 @@ for i, row in data.iterrows():
     data.at[i, 'Referred By:'] = referral2       # replace line item
     
 
-    assitance = row['Type of Assistance (CLASS)']
+    assitance = row['Type of Assistance (CLASS)']     # pull line item
+    assistance = str(assitance)                       # convert to string
+    assistance = assistance.strip()                   # remove whitespace
+    if not assistance in Assistance_types:
+        assistance = "Error: Not a valid Assistance type"     # confirm that type is in predetermined list
+    data.at[i, 'Type of Assistance (CLASS)'] = assistance
 
 
+    amount = row[' Amount ']         # pull amount line item
+    amount = str(amount)
+    if amount == '':
+        amount = "Missing"
+    if amount.title()[0:5] == "Wait":     # make pending consistent
+        amount = "Pending"
+    amount = amount.strip()
+    amount = amount.replace("$","") # replace $
+    amount = amount.replace(",","")   # replace commas
+    amount = amount.replace("-","0")    # convert dashes to 0 
+    data.at[i, ' Amount '] = amount
 
 
-print(data['Sexual Orientation'].unique())
-print(data['Sexual Orientation'].sample(10))
-print(len(data['Sexual Orientation'].unique()))
+    method = row['Payment Method']     # pull payment method
+    method = str(method)               # convert to string
+    method = method.strip()            # remove whitespace
+    if method == "?" or method == "":      # make missing data consistent
+        method = "Missing"
+    data.at[i, 'Payment Method'] = method      # replace line item
 
 
-#st.write(data.sample(50))
+    payable_to = row['Payable to:']     # pull line item
+    payable_to = str(payable_to)        # convert to string
+    payable_to = payable_to.strip()     # remove whitespace
+    payable_to = payable_to.title()     # consistent capitalization
+    if payable_to == "":
+        payable_to = "Missing" # make missing data consistent
+    data.at[i, 'Payable to:'] = payable_to         # replace line item
+    
+
+    letter = row['Patient Letter Notified? (Directly/Indirectly through rep)']   # pull line item
+    letter = str(letter)
+    letter = letter.strip()                                  # remove whitespace
+    if letter == "":
+        letter = "Missing"
+    if letter == "n/a" or letter == "na":                    # make N/A consistent
+        letter = "N/A"
+    elif "/" in letter:                                      # if date convert to yes
+        letter = "Yes"
+    letter = letter.title()
+    data.at[i, 'Patient Letter Notified? (Directly/Indirectly through rep)'] = letter    # replace line item
+
+
+    signed = row['Application Signed?']     # pull signed line item
+    signed = str(signed)                     # convert to string
+    signed = signed.strip()                  # remove whitespace
+    signed = signed.title()                  # make capitalizaion consistent
+    if signed == "":
+        signed = "Missing"                      # make missing data consistent
+    if signed == "NA" or signed == "na" or signed == "n/a":
+        signed = "N/A"                                        # account for variation of N/A
+    data.at[i, 'Application Signed?'] = signed    # replace line item
+
+
+    notes = row['Notes']
+    notes = str(notes)          # just clean up formatting
+    notes = notes.strip()
+    notes = notes.title()
+    data.at[i, 'Notes'] = notes
+
+
+print(data['Pt City'].unique())
+print(data['Pt City'].sample(10))
+print(len(data['Pt City'].unique()))
+
+
+#st.write(data)
 
 

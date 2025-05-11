@@ -60,3 +60,6 @@ states_name = {
 }
 
 state_names2 = {v:k for k, v in states_name.items()}
+
+Assistance_types = ["Gas", "Food/Groceries", "Medical Supplies/Prescription Co-pay(s)", "Multiple", "Hotel", "Other",
+              "Housing", "Utilities", "Car Payment", "Phone/Internet", ]
