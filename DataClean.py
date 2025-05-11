@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import regex as re
-import streamlit as st
 from OtherInfo import states, state_names2, Assistance_types
 
 data = pd.read_csv('https://raw.githubusercontent.com/SamEdstrand/ECON-8320-Semester-Project/refs/heads/main/Data%20-%202.csv')
@@ -375,12 +374,12 @@ for i, row in data.iterrows():
     notes = notes.title()
     data.at[i, 'Notes'] = notes
 
-
-print(data['Pt City'].unique())
-print(data['Pt City'].sample(10))
-print(len(data['Pt City'].unique()))
+data = data
 
 
-#st.write(data)
+# data cleaning validity tests
+#print(data['Pt City'].unique())
+#print(data['Pt City'].sample(10))
+#print(len(data['Pt City'].unique()))
 
 
