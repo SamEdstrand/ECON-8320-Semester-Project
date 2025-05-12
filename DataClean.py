@@ -51,12 +51,12 @@ for i, row in data.iterrows():
             balance = round(float(balance),2)           # convert to float, round to 2 decimals
             balance *= -1                             # reinstate negative balance
         except:
-            balance = "Error: Not a valid Balance"
+            balance = 0
     else:                                        # for positive balances
         try:
             balance = round(float(balance),2)         # convert to float, round 2 decimals
         except:
-            balance = "Error: Not a valid Balance"
+            balance = 0
     data.at[i, ' Remaining Balance '] = balance     # replace balance line item
 
 
@@ -371,6 +371,6 @@ data = data.drop(data.columns[30], axis = 1)
 print(data.head())
 
 #data cleaning validity tests
-print(data[' Amount '].unique())
-print(data[' Amount '].sample(10))
-print(len(data[' Amount '].unique()))
+print(data[' Remaining Balance '].unique())
+print(data[' Remaining Balance '].sample(10))
+print(len(data[' Remaining Balance '].unique()))
