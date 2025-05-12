@@ -26,4 +26,4 @@ st.bar_chart(year_by_year_df)
 total = 0
 for a in year:
     total += year[a]
-st.write("Total assistance provided: $", round(total,2))
+st.write("Cumulative assistance provided: $", round(total,2))
