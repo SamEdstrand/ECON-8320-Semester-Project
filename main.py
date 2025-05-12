@@ -1,3 +1,3 @@
 import streamlit as st
 
-st.title("Hope Foundation Dashboard")
+st.title("Hope Foundation Dashboard") # title page
