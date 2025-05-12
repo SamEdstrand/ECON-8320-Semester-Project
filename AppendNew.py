@@ -2,9 +2,16 @@ import pandas as pd
 from DataClean_Function import clean
 from DataClean import data
 
-file_name = input("Enter csv file name: ")
+def update_data(csv):
+    try:
+        new_data = pd.read_csv(csv)
+        print(new_data.head())
+    except FileNotFoundError:
+        print("File not found", csv)
+    except Exception as e:
+        print("Error:", e)
 
-new_data = pd.read_csv(file_name)
+
 new_data = clean(new_data)
 
 data = pd.concat([data, new_data], ignore_index=True)
