@@ -368,9 +368,7 @@ for i, row in data.iterrows():
 data = data.drop(data.columns[31], axis = 1)   #drop excess columns
 data = data.drop(data.columns[30], axis = 1)
 
-print(data.head())
-
 #data cleaning validity tests
-print(data[' Remaining Balance '].unique())
-print(data[' Remaining Balance '].sample(10))
-print(len(data[' Remaining Balance '].unique()))
+#print(data[' Remaining Balance '].unique())
+#print(data[' Remaining Balance '].sample(10))
+#print(len(data[' Remaining Balance '].unique()))
