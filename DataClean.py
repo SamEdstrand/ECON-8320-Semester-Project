@@ -307,14 +307,14 @@ for i, row in data.iterrows():
 
     amount = row[' Amount ']         # pull amount line item
     amount = str(amount)
-    if amount == '':
-        amount = "Missing"
-    if amount.title()[0:5] == "Wait":     # make pending consistent
-        amount = "Pending"
     amount = amount.strip()
     amount = amount.replace("$","") # replace $
     amount = amount.replace(",","")   # replace commas
-    amount = amount.replace("-","0")    # convert dashes to 0 
+    amount = amount.replace("-","0")    # convert dashes to 0
+    try:
+        amount = float(amount)  # attempt to make $ amounts float
+    except:
+        amount = np.nan
     data.at[i, ' Amount '] = amount
 
 
@@ -370,7 +370,7 @@ data = data.drop(data.columns[30], axis = 1)
 
 print(data.head())
 
-# data cleaning validity tests
-#print(data['Pt City'].unique())
-#print(data['Pt City'].sample(10))
-#print(len(data['Pt City'].unique()))
+#data cleaning validity tests
+print(data[' Amount '].unique())
+print(data[' Amount '].sample(10))
+print(len(data[' Amount '].unique()))
