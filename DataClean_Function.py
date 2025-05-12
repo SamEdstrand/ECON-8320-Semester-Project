@@ -30,14 +30,12 @@ def clean(df):
             request_date = "Error: Not a valid Grant Req Date"  # if grant request doesnt match DD/MM/YYYY
         df.at[i, 'Grant Req Date'] = request_date  # replace grant request date line item
 
-
         app_year = row['App Year']  # pull app year line item
         app_year = int(app_year)  # convert to
         if app_year != 1 and app_year != 2 and app_year != 3:
             app_year = "Error: Not a valid App Year"
         app_year = str(app_year)  # make data type consistent for arrow serialization
         df.at[i, 'App Year'] = app_year  # replace app_year line item
-
 
         balance = row[' Remaining Balance ']  # pull remaining balance line item
         balance = str(balance)  # convert to string
@@ -51,12 +49,12 @@ def clean(df):
                 balance = round(float(balance), 2)  # convert to float, round to 2 decimals
                 balance *= -1  # reinstate negative balance
             except:
-                balance = "Error: Not a valid Balance"
+                balance = 0
         else:  # for positive balances
             try:
                 balance = round(float(balance), 2)  # convert to float, round 2 decimals
             except:
-                balance = "Error: Not a valid Balance"
+                balance = 0
         df.at[i, ' Remaining Balance '] = balance  # replace balance line item
 
         request_status = row['Request Status']  # pull request status line item
@@ -145,7 +143,8 @@ def clean(df):
         if re.match(r'^(([1-9]|[1][0-2])-([1-9]|[1-2][0-9]|[3][0-1])-(\d\d|\d\d\d\d))$',
                     DOB):  # allow for 2 or 4 digit years
             DOB = request_date.replace("-", "/")  # replace dashes with slashes
-        if not re.match(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d|\d\d\d\d))$', DOB) and DOB != "Missing":
+        if not re.match(r'^(([1-9]|[1][0-2])\/([1-9]|[1-2][0-9]|[3][0-1])\/(\d\d|\d\d\d\d))$',
+                        DOB) and DOB != "Missing":
             DOB = "Error: Not a valid Date of Birth"  # if DOB grant request doesnt match DD/MM/YYYY
         df.at[i, 'DOB'] = DOB  # replace line item
 
@@ -230,14 +229,13 @@ def clean(df):
             household_size = "Missing"
         if household_size != "Missing":
             try:
-                household_size = float(household_size)  # attempt convert to integer
+                household_size = int(household_size)  # attempt convert to integer
                 if household_size > 25:  # check that household size is reasonable
                     household_size = "Error: Invalid Household Size"
             except ValueError:
                 household_size = "Error: Invalid Household Size"  # if not missing or integer, assumed to be an error
         household_size = str(household_size)  # make data type consistent for arrow serialization
         df.at[i, 'Household Size'] = household_size  # replace line item
-
 
         h_income = row[' Total Household Gross Monthly Income ']  # pull income line item
         h_income = str(h_income)  # convert to string
@@ -253,12 +251,12 @@ def clean(df):
                 h_income = round(float(h_income), 2)  # convert to float, roun
                 h_income *= -1  # reinstate negative balan
             except:
-                h_income = np.nan # make data type consistent for arrow serialization
+                h_income = np.nan  # make data type consistent for arrow serialization
         else:  # for positive balances
             try:
                 h_income = round(float(balance), 2)  # convert to float, round
             except:
-                h_income = np.nan # make data type consistent for arrow serialization
+                h_income = np.nan  # make data type consistent for arrow serialization
         df.at[i, ' Total Household Gross Monthly Income '] = h_income  # replace income line item
 
         distance = row['Distance roundtrip/Tx']  # pull distance line item
@@ -281,21 +279,21 @@ def clean(df):
 
         assitance = row['Type of Assistance (CLASS)']  # pull line item
         assistance = str(assitance)  # convert to string
-        assistance = assistance.strip()  # remove whitespace
-        if not assistance in Assistance_types:
-            assistance = "Error: Not a valid Assistance type"  # confirm that type is in predetermined list
+        assistance = assistance.strip()  # remove whitespac
+        if assitance not in Assistance_types:
+            assistance = "Missing"
         df.at[i, 'Type of Assistance (CLASS)'] = assistance
 
         amount = row[' Amount ']  # pull amount line item
         amount = str(amount)
-        if amount == '':
-            amount = "Missing"
-        if amount.title()[0:5] == "Wait":  # make pending consistent
-            amount = "Pending"
         amount = amount.strip()
         amount = amount.replace("$", "")  # replace $
         amount = amount.replace(",", "")  # replace commas
         amount = amount.replace("-", "0")  # convert dashes to 0
+        try:
+            amount = float(amount)  # attempt to make $ amounts float
+        except:
+            amount = np.nan
         df.at[i, ' Amount '] = amount
 
         method = row['Payment Method']  # pull payment method
