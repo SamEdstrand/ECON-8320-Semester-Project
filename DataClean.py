@@ -3,7 +3,7 @@ import numpy as np
 import regex as re
 from OtherInfo import states, state_names2, Assistance_types
 
-data = pd.read_csv('https://raw.githubusercontent.com/SamEdstrand/ECON-8320-Semester-Project/refs/heads/main/Data%20-%202.csv')
+data = pd.read_csv('https://raw.githubusercontent.com/SamEdstrand/ECON-8320-Semester-Project/refs/heads/main/Data-2.csv')
 
 # clean data
 for i, row in data.iterrows():
