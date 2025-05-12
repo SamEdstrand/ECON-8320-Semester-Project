@@ -1,0 +1,27 @@
+name: Process CSV Data
+
+on: 
+  push:
+    branches:
+    - main
+
+jobs:
+  process_csv:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: action/setup-python@v4
+      with:
+        python version: 3.12
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt 
+
+    - name: Run Python script
+      run: python AppendNew.py newdata.csv
+      
+
+  
