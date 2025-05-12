@@ -15,7 +15,7 @@ for i, row in data.iterrows():
 st.write("Number of patients with an outstanding balance:", out_bal_count)
 st.write("Total outstanding balance: $", round(out_bal, 2))
 st.write("Average outstanding balance: $", round(out_bal / out_bal_count, 2))
-st.write("For approved requests only")
+st.write("(For approved requests only)")
 
 average_assist = {}
 for i in data['Type of Assistance (CLASS)'].unique():
