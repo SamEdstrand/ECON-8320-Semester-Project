@@ -16,7 +16,7 @@ jobs:
 
       - name: Download New CSV
         run: |
-          if curl -o Data - 2.csv https://raw.githubusercontent.com/SamEdstrand/ECON-8320-Semester-Project/refs/heads/main/Data%20-%202.csv; then
+          if curl Data - 2.csv https://raw.githubusercontent.com/SamEdstrand/ECON-8320-Semester-Project/refs/heads/main/Data%20-%202.csv; then
             echo "CSV download successful."
           else
             echo "CSV download failed."
