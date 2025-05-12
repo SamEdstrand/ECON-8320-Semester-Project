@@ -16,3 +16,13 @@ st.write("Number of patients with an outstanding balance:", out_bal_count)
 st.write("Total outstanding balance: $", round(out_bal, 2))
 st.write("Average outstanding balance: $", round(out_bal / out_bal_count, 2))
 st.write("For approved requests only")
+
+average_assist = {}
+for i in data['Type of Assistance (CLASS)'].unique():
+    average_assist[i] = data.loc[data['Type of Assistance (CLASS)'] == i, " Amount "].mean()
+
+avg_ast_df = pd.DataFrame(average_assist, index=[0, len(average_assist)-1])
+avg_ast_df = avg_ast_df.T
+avg_ast_df = avg_ast_df.drop(avg_ast_df.columns[1] , axis=1)
+st.write("Average $ Amount of Assistance per type of Assistance Provided")
+st.write(avg_ast_df.T)

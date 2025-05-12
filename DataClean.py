@@ -299,9 +299,9 @@ for i, row in data.iterrows():
 
     assitance = row['Type of Assistance (CLASS)']     # pull line item
     assistance = str(assitance)                       # convert to string
-    assistance = assistance.strip()                   # remove whitespace
-    if not assistance in Assistance_types:
-        assistance = "Error: Not a valid Assistance type"     # confirm that type is in predetermined list
+    assistance = assistance.strip()     # remove whitespac
+    if assitance not in Assistance_types:
+           assistance = "Missing"
     data.at[i, 'Type of Assistance (CLASS)'] = assistance
 
 
