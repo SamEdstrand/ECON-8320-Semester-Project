@@ -22,3 +22,8 @@ year_by_year_df = year_by_year_df.T
 year_by_year_df = year_by_year_df.drop(year_by_year_df.columns[1], axis =1)
 st.write("Total $ worth of assistance provided annually")
 st.bar_chart(year_by_year_df)
+
+total = 0
+for a in year:
+    total += year[a]
+st.write("Total assistance provided: $", total)
