@@ -36,7 +36,7 @@ jobs:
       - name: Check for Differences
         id: check-differences
         run: |
-          if ! diff -q Data - 2.csv Data - 2.csv; then
+          if ! diff -q Data-2.csv Data-2.csv; then
             echo "CSV files are different."
             echo "DIFFERENT_CSV=true" >> $GITHUB_ENV
           else
@@ -47,7 +47,7 @@ jobs:
       - name: Overwrite CSV
         if: steps.check-csv.outcome == 'success' && env.DIFFERENT_CSV == 'true'
         run: |
-          mv Data - 2.csv Data - 2.csv
+          mv Data-2.csv Data-2.csv
 
       - name: Commit and Push Changes
         if: steps.check-csv.outcome == 'success' && env.DIFFERENT_CSV == 'true'
@@ -60,7 +60,7 @@ jobs:
 
           git checkout -b "$branch_name"
 
-          git add Data - 2.csv
+          git add Data-2.csv
 
           git commit -m "Update CSV file"
 
