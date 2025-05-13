@@ -20,7 +20,7 @@ jobs:
       run: python -m pip install --upgrade pip pandas pip streamlit
 
     - name: execute py script #run scripts
-      run: python pages/Page_1.py
+      run: python DataClean.py pages/Page_1.py pages/Page_2.py pages/Page_3.py pages/Page_4.py
        
         
    
