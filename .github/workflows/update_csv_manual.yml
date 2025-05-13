@@ -18,6 +18,7 @@ jobs:
 
     - name: install python packages
       run: python -m pip install --upgrade pip pandas
+           python -m pip install --upgrade pip streamlit
 
     - name: execute py script #run scripts
       run: python pages/Page_1.py
