@@ -1,0 +1,23 @@
+on:
+  schedule:
+    - cron:  '0 0 1 * *' # run every 1st day of month 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: checkout repo content
+      uses: actions/checkout@v4
+          
+    - name: setup python
+      uses: actions/setup-python@v5
+      with:
+           python-version: '3.12'     # using python 3.12
+
+    - name: install python packages    # get packages
+      run: python -m pip install --upgrade pip pandas pip streamlit pip regex
+
+    - name: execute py script #run scripts
+      run: python DataClean.py pages/Page_1.py pages/Page_2.py pages/Page_3.py pages/Page_4.py  # run data clean and all 4 pages
+       
