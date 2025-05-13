@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
-from DataClean import data
+from Main import run
 
 st.title("Summary")
-
+data = run()
 
 year = {'18':'', '19':'', '20':'', '21':'', '22':'', '23':'', '24':'', '25':''} # store for sums
 year_keys = ['18','19','20','21','22','23','24','25']  # index for loop

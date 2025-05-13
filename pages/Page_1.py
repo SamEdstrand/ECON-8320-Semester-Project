@@ -1,7 +1,7 @@
 import streamlit as st
-from DataClean import data
+from Main import run
 
-st_data =  data  # import dataframe from original Data Clean file
+data = run()  # import dataframe from original Data Clean file
 
 st.title("Applications for Review")
 

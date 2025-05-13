@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
-from DataClean import data
+from Main import run
 
 st.title("Patients with Outstanding Balances")
+data = run()
 
 out_bal = 0
 out_bal_count = 0

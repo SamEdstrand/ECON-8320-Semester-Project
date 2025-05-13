@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
-from DataClean import data # import dataframe from original Data Clean file
+from Main import run # import dataframe from original Data Clean file
 
 st.title("Demographic Analysis")
+data = run()
 
 city_dict = {}
 for i in data['Pt City'].unique():   # for each individual city
