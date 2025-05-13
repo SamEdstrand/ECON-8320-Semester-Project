@@ -20,7 +20,6 @@ st.write("(For approved requests only)")
 average_assist = {}
 for i in data['Type of Assistance (CLASS)'].unique():           # for each type of assistance
     average_assist[i] = data.loc[data['Type of Assistance (CLASS)'] == i, " Amount "].mean() # mean per type
-    average_assist[i] = round(average_assist[i], 2)
 
 avg_ast_df = pd.DataFrame(average_assist, index=[0, len(average_assist)-1])
 avg_ast_df = avg_ast_df.T
