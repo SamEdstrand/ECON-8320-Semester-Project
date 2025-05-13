@@ -28,7 +28,7 @@ ins_dict = {}
 for i in data['Insurance Type'].unique():
     if i == "Nan":
         i = "Missing"                   # convert for reporting consistency, messed up on data cleaning
-    ins_dict[i] = data.loc[data['Insurance Type'] == i, ' Amount '].sum(). # sum by each insurance type
+    ins_dict[i] = data.loc[data['Insurance Type'] == i, ' Amount '].sum() # sum by each insurance type
 
 ins_df = pd.DataFrame(ins_dict, index=[0, len(ins_dict)-1])
 st.write("$ Amount of assistance provided by insurance type ")
