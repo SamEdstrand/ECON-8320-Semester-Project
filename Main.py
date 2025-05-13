@@ -4,7 +4,7 @@ import regex as re
 import streamlit as st
 from OtherInfo import states, state_names2, Assistance_types
 
-def run():
+def run():       
     data = pd.read_csv('https://raw.githubusercontent.com/SamEdstrand/ECON-8320-Semester-Project/refs/heads/main/Data-2.csv')
 
     # clean data
@@ -343,6 +343,6 @@ def run():
     data = data.drop(data.columns[31], axis=1)  # drop excess columns
     data = data.drop(data.columns[30], axis=1)
 
-    return data
+    return data   # returns new dataframe from whatever is in the Data-2 csv
 
 st.title("Hope Foundation Dashboard") # title page
